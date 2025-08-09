@@ -54,6 +54,14 @@ data class Color(
         )
     }
 
+    val rgb: Int
+        get() {
+            val r = (r * 255.0).toInt().coerceIn(0, 255)
+            val g = (g * 255.0).toInt().coerceIn(0, 255)
+            val b = (b * 255.0).toInt().coerceIn(0, 255)
+            return (r shl 16) or (g shl 8) or b
+        }
+
     companion object {
 
         val white = Color(1, 1, 1)
