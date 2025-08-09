@@ -1,5 +1,7 @@
 package org.example
 
+import kotlin.time.measureTime
+
 object App {
 
     private fun renderImage() {
@@ -16,20 +18,36 @@ object App {
     fun main(args: Array<String>) {
         println("---")
 
-        Math.PI
+        val rayOrigin = Point(0, 0, -5)
+        val wallZ = 10.0
+        val wallSize = 7.0
+        val canvasPixels = 640
+        val pixelSize = wallSize / canvasPixels
+        val half = wallSize / 2
+        val canvas = Image(canvasPixels, canvasPixels)
+        val color = Color.red
+        val shape = Sphere()
+        val buffer = IntersectionsBuffer()
 
-        val p = Point(1, -2, 3)
-        val tr = transform {
-            translate(1, 2, 3)
-            rotateX(pi / 3)
-            rotateY(pi / 2)
-            rotateZ(pi / 4)
-            scale(2, 0.4, 2)
+        val duration = measureTime {
+            for (y in 0 until canvasPixels) {
+                val worldY = half - pixelSize * y
+                for (x in 0 until canvasPixels) {
+                    buffer.clear()
+
+                    val worldX = -half + pixelSize * x
+                    val position = Point(worldX, worldY, wallZ)
+                    val ray = Ray(rayOrigin, (position - rayOrigin).unit)
+                    shape.intersect(ray, buffer)
+                    val hit = buffer.hit
+                    if (hit != null) {
+                        canvas[x, y] = color
+                    }
+                }
+            }
         }
-        val transformed = tr * p
-        val original = tr.inverse * transformed
-        println(p)
-        println(transformed)
-        println(original)
+        println("Rendering time: $duration")
+
+        canvas.save("renders/sphere.png")
     }
 }

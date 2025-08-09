@@ -71,6 +71,13 @@ class Matrix(
         )
     }
 
+    operator fun times(ray: Ray): Ray {
+        return Ray(
+            this * ray.origin,
+            this * ray.direction
+        )
+    }
+
     private val det by lazy {
         if (size == 2) return@lazy this[0, 0] * this[1, 1] - this[1, 0] * this[0, 1]
         var result = 0.0
