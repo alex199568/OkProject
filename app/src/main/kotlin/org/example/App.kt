@@ -16,8 +16,16 @@ object App {
     fun main(args: Array<String>) {
         println("---")
 
+        Math.PI
+
         val p = Point(1, -2, 3)
-        val tr = Matrix.translate(1, 2, -3) * Matrix.scale(0.2, 1.2, 0.5)
+        val tr = transform {
+            translate(1, 2, 3)
+            rotateX(pi / 3)
+            rotateY(pi / 2)
+            rotateZ(pi / 4)
+            scale(2, 0.4, 2)
+        }
         val transformed = tr * p
         val original = tr.inverse * transformed
         println(p)
