@@ -12,6 +12,36 @@ data class Vector(
         z = z.toDouble()
     )
 
+    operator fun plus(other: Vector): Vector {
+        return Vector(
+            x = x + other.x,
+            y = y + other.y,
+            z = z + other.z
+        )
+    }
+
+    operator fun minus(other: Vector): Vector {
+        return Vector(
+            x = x - other.x,
+            y = y - other.y,
+            z = z - other.z
+        )
+    }
+
+    operator fun unaryMinus(): Vector {
+        return Vector(-x, -y, -z)
+    }
+
+    operator fun times(n: Number): Vector {
+        val d = n.toDouble()
+        return Vector(x * d, y * d, z * d)
+    }
+
+    operator fun div(n: Number): Vector {
+        val d = n.toDouble()
+        return Vector(x / d, y / d, z / d)
+    }
+
     companion object {
 
         val zero = Vector(0, 0, 0)
