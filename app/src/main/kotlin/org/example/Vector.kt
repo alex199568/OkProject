@@ -60,6 +60,10 @@ data class Vector(
         this / length
     }
 
+    fun reflect(normal: Vector): Vector {
+        return this - normal * (2 * (this dot normal));
+    }
+
     infix fun cross(other: Vector): Vector {
         return Vector(
             x = y * other.z - z * other.y,

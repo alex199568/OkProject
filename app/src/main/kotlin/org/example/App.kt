@@ -25,7 +25,8 @@ object App {
         val pixelSize = wallSize / canvasPixels
         val half = wallSize / 2
         val canvas = Image(canvasPixels, canvasPixels)
-        val color = Color.red
+        val material = Material(Color.red, 0.1, 0.9, 0.9, 200.0)
+        val light = Light(Point(-10, 10, -10), Color.gray)
         val shape = Sphere()
         val buffer = IntersectionsBuffer()
 
@@ -41,6 +42,10 @@ object App {
                     shape.intersect(ray, buffer)
                     val hit = buffer.hit
                     if (hit != null) {
+                        val point = ray[hit.t]
+                        val normal = shape.normal(point)
+                        val eye = -ray.direction
+                        val color = light.calculate(material, point, eye, normal)
                         canvas[x, y] = color
                     }
                 }
@@ -48,6 +53,6 @@ object App {
         }
         println("Rendering time: $duration")
 
-        canvas.save("renders/sphere.png")
+        canvas.save("renders/light.png")
     }
 }

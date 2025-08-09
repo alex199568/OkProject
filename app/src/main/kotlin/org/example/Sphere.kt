@@ -23,4 +23,15 @@ class Sphere(
     fun intersect(ray: Ray, buffer: IntersectionsBuffer) {
         localIntersect(transform.inverse * ray, buffer)
     }
+
+    private fun localNormal(point: Point): Vector {
+        return point - Point.zero
+    }
+
+    fun normal(point: Point): Vector {
+        val objectPoint = transform.inverse * point
+        val objectNormal = localNormal(objectPoint)
+        val worldNormal = transform.inverse.transposed * objectNormal
+        return worldNormal.unit
+    }
 }
