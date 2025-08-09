@@ -36,4 +36,27 @@ class Camera(
         val direction = (pixel - origin).unit
         return Ray(origin, direction)
     }
+
+    fun rays(aa: Int, x: Int, y: Int): List<Ray> {
+        val samplesPerDim = aa
+        val res = ArrayList<Ray>(samplesPerDim * samplesPerDim)
+        val step = 1.0 / samplesPerDim
+
+        for (ix in 0 until samplesPerDim) {
+            for (iy in 0 until samplesPerDim) {
+                val u = (ix + 0.5) * step   // in [0,1)
+                val v = (iy + 0.5) * step   // in [0,1)
+
+                val xOffset = (x + u) * pixelSize
+                val yOffset = (y + v) * pixelSize
+                val worldX = halfWidth - xOffset
+                val worldY = halfHeight - yOffset
+
+                val pixel = view.inverse * Point(worldX, worldY, -1)
+                val direction = (pixel - origin).unit
+                res.add(Ray(origin, direction))
+            }
+        }
+        return res
+    }
 }

@@ -16,6 +16,21 @@ object App {
         return result
     }
 
+    private fun renderAa(scene: Scene, camera: Camera): Image {
+        val result = Image(camera.w, camera.h)
+        for (y in 0 until camera.h) {
+            for (x in 0 until camera.w) {
+                val rays = camera.rays(8, x, y)
+                val color = Color(0, 0, 0)
+                for (ray in rays) {
+                    color += scene.color(ray)
+                }
+                result[x, y] = color / rays.size
+            }
+        }
+        return result
+    }
+
     @JvmStatic
     fun main(args: Array<String>) {
         println("---")
@@ -39,9 +54,9 @@ object App {
             )
         )
 
-        val (image, duration) = measureTimedValue { render(scene, camera) }
+        val (image, duration) = measureTimedValue { renderAa(scene, camera) }
         println("Rendering time: $duration")
 
-        image.save("renders/plane.png")
+        image.save("renders/plane_aa.png")
     }
 }
