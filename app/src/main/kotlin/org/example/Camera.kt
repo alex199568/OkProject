@@ -9,10 +9,10 @@ class Camera(
     val view: Matrix = Matrix.identity
 ) {
 
-    private val halfWidth: Double
-    private val halfHeight: Double
-    private val pixelSize: Double
-    private val origin = view.inverse * Point.zero
+    val halfWidth: Double
+    val halfHeight: Double
+    val pixelSize: Double
+    val origin = view.inverse * Point.zero
 
     init {
         val halfView = tan(fov / 2)

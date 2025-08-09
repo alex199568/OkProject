@@ -2,29 +2,20 @@ package org.example
 
 import org.example.shape.Plane
 import org.example.shape.Sphere
+import java.util.stream.IntStream
 import kotlin.time.measureTimedValue
 
 object App {
 
-    private fun render(scene: Scene, camera: Camera): Image {
+    fun renderAaParallel(scene: Scene, camera: Camera, aa: Int): Image {
         val result = Image(camera.w, camera.h)
-        for (y in 0 until camera.h) {
-            for (x in 0 until camera.w) {
-                result[x, y] = scene.color(camera.ray(x, y))
-            }
-        }
-        return result
-    }
 
-    private fun renderAa(scene: Scene, camera: Camera): Image {
-        val result = Image(camera.w, camera.h)
-        for (y in 0 until camera.h) {
+        IntStream.range(0, camera.h).parallel().forEach { y ->
+            val buffer = IntersectionsBuffer()
             for (x in 0 until camera.w) {
-                val rays = camera.rays(8, x, y)
+                val rays = camera.rays(aa, x, y)
                 val color = Color(0, 0, 0)
-                for (ray in rays) {
-                    color += scene.color(ray)
-                }
+                for (ray in rays) color += scene.color(ray, buffer)
                 result[x, y] = color / rays.size
             }
         }
@@ -54,9 +45,9 @@ object App {
             )
         )
 
-        val (image, duration) = measureTimedValue { renderAa(scene, camera) }
+        val (image, duration) = measureTimedValue { renderAaParallel(scene, camera, 4) }
         println("Rendering time: $duration")
 
-        image.save("renders/plane_aa.png")
+        image.save("renders/plane_aa_parallel.png")
     }
 }
