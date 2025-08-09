@@ -7,7 +7,7 @@ class Matrix(
     private val items = items.map { it.toDouble() }.toDoubleArray()
 
     constructor(size: Int) : this(
-        *Array(size) { 0.0 }
+        *Array(size * size) { 0.0 }
     )
 
     private val size by lazy {
@@ -66,6 +66,71 @@ class Matrix(
             y = this[1, 0] * point.x + this[1, 1] * point.y + this[1, 2] * point.z + this[1, 3],
             z = this[2, 0] * point.x + this[2, 1] * point.y + this[2, 2] * point.z + this[2, 3],
         )
+    }
+
+    private val det by lazy {
+        if (size == 2) return@lazy this[0, 0] * this[1, 1] - this[1, 0] * this[0, 1]
+        var result = 0.0
+        for (j in 0 until size) {
+            result += this[0, j] * cofactor(0, j)
+        }
+        result
+    }
+
+    private fun minor(i: Int, j: Int): Double {
+        return submatrix(i, j).det
+    }
+
+    private fun cofactor(i: Int, j: Int): Double {
+        val m = minor(i, j)
+        if ((i + j) % 2 == 0) return m
+        return -m
+    }
+
+    private fun submatrix(iExclude: Int, jExclude: Int): Matrix {
+        val result = Matrix(size - 1)
+
+        var iOffset = 0
+        for (i in 0 until size) {
+            if (i == iExclude) {
+                iOffset = 1
+                continue
+            }
+
+            var jOffset = 0
+            for (j in 0 until size) {
+                if (j == jExclude) {
+                    jOffset = 1
+                    continue
+                }
+
+                result[i - iOffset, j - jOffset] = this[i, j]
+            }
+        }
+
+        return result
+    }
+
+    val transposed by lazy {
+        val result = Matrix(size)
+        for (i in 0 until size) {
+            for (j in 0 until size) {
+                result[j, i] = this[i, j]
+            }
+        }
+        result
+    }
+
+    val inverse by lazy {
+        val result = Matrix(size)
+
+        for (i in 0 until size) {
+            for (j in 0 until size) {
+                result[j, i] = cofactor(i, j) / det
+            }
+        }
+
+        result
     }
 
     companion object {

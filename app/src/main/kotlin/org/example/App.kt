@@ -16,6 +16,12 @@ object App {
     fun main(args: Array<String>) {
         println("---")
 
-        println(Matrix.identity)
+        val p = Point(1, -2, 3)
+        val tr = Matrix.translate(1, 2, -3) * Matrix.scale(0.2, 1.2, 0.5)
+        val transformed = tr * p
+        val original = tr.inverse * transformed
+        println(p)
+        println(transformed)
+        println(original)
     }
 }
