@@ -7,6 +7,7 @@ fun transform(builder: Transform.() -> Unit): Matrix {
 }
 
 val pi = Math.PI
+val epsilon = 1e-15
 
 val Number.degs: Double
     get() {

@@ -19,15 +19,18 @@ object App {
         println("---")
 
         val redMaterial = Material(Color.red, 0.1, 0.9, 0.9, 200.0)
-        val s1 = Sphere(redMaterial, transform { scale(0.3, 0.3, 0.3); move(-0.5, 0, 0) })
+        val s1 = Sphere(redMaterial, transform { scale(0.3, 0.3, 0.3); move(-0.5, 0.3, 0) })
 
         val greenMaterial = Material(Color.green, 0.1, 0.9, 0.9, 200.0)
-        val s2 = Sphere(greenMaterial, transform { scale(0.2); move(0.3, 0, 0) })
+        val s2 = Sphere(greenMaterial, transform { scale(0.2); move(0.3, 0.2, 0) })
 
-        val camera = Camera(640, 480, pi / 3, Matrix.lookAt(Point(0, 0, -2), Point.zero, Vector.y))
+        val grayMaterial = Material(Color.gray, 0.1, 0.9, 0.9, 200.0)
+        val floor = Sphere(grayMaterial, transform { scale(16, 0.01, 16) })
+
+        val camera = Camera(640, 480, pi / 3, Matrix.lookAt(Point(0, 1, -2), Point.zero, Vector.y))
 
         val scene = Scene(
-            shapes = listOf(s1, s2),
+            shapes = listOf(s1, s2, floor),
             lights = listOf(
                 Light(Point(-10, 10, -10), Color.gray),
                 Light(Point(10, 4, -10), Color.darkGray)
@@ -37,6 +40,6 @@ object App {
         val (image, duration) = measureTimedValue { render(scene, camera) }
         println("Rendering time: $duration")
 
-        image.save("renders/scene.png")
+        image.save("renders/shadows.png")
     }
 }

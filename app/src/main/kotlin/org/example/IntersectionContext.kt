@@ -4,6 +4,7 @@ class IntersectionContext {
 
     val hit: Intersection
     val point: Point
+    val overPoint: Point
     val eye: Vector
     val normal: Vector
 
@@ -17,5 +18,6 @@ class IntersectionContext {
         } else {
             n
         }
+        overPoint = point + normal * epsilon
     }
 }
