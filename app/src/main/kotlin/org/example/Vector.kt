@@ -1,5 +1,7 @@
 package org.example
 
+import kotlin.math.sqrt
+
 data class Vector(
     val x: Double,
     val y: Double,
@@ -40,6 +42,30 @@ data class Vector(
     operator fun div(n: Number): Vector {
         val d = n.toDouble()
         return Vector(x / d, y / d, z / d)
+    }
+
+    infix fun dot(other: Vector): Double {
+        return x * other.x + y * other.y + z * other.z
+    }
+
+    val squaredLength by lazy {
+        this dot this
+    }
+
+    val length by lazy {
+        sqrt(squaredLength)
+    }
+
+    val unit by lazy {
+        this / length
+    }
+
+    infix fun cross(other: Vector): Vector {
+        return Vector(
+            x = y * other.z - z * other.y,
+            y = z * other.x - x * other.z,
+            z = x * other.y - y * other.x
+        )
     }
 
     companion object {
