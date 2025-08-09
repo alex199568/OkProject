@@ -1,5 +1,8 @@
 package org.example
 
+import kotlin.math.cos
+import kotlin.math.sin
+
 class Matrix(
     vararg items: Number
 ) {
@@ -147,6 +150,39 @@ class Matrix(
                 1, 0, 0, x,
                 0, 1, 0, y,
                 0, 0, 1, z,
+                0, 0, 0, 1
+            )
+        }
+
+        fun rotationX(rads: Number): Matrix {
+            val c = cos(rads.toDouble())
+            val s = sin(rads.toDouble())
+            return Matrix(
+                1, 0, 0, 0,
+                0, c, -s, 0,
+                0, s, c, 0,
+                0, 0, 0, 1
+            )
+        }
+
+        fun rotationY(rads: Number): Matrix {
+            val c = cos(rads.toDouble())
+            val s = sin(rads.toDouble())
+            return Matrix(
+                c, 0, s, 0,
+                0, 1, 0, 0,
+                -s, 0, c, 0,
+                0, 0, 0, 1
+            )
+        }
+
+        fun rotationZ(rads: Number): Matrix {
+            val c = cos(rads.toDouble())
+            val s = sin(rads.toDouble())
+            return Matrix(
+                c, -s, 0, 0,
+                s, c, 0, 0,
+                0, 0, 1, 0,
                 0, 0, 0, 1
             )
         }
