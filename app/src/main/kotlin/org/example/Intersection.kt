@@ -1,7 +1,9 @@
 package org.example
 
+import org.example.shape.Shape
+
 class Intersection(
-    val shape: Sphere,
+    val shape: Shape,
     val t: Double
 ) : Comparable<Intersection> {
 
