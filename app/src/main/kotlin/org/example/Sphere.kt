@@ -3,6 +3,7 @@ package org.example
 import kotlin.math.sqrt
 
 class Sphere(
+    val material: Material,
     private val transform: Matrix = Matrix.identity
 ) {
 

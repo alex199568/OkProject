@@ -8,11 +8,13 @@ class Light(
 ) {
 
     fun calculate(
-        material: Material,
-        point: Point,
-        eye: Vector,
-        normal: Vector
+        context: IntersectionContext
     ): Color {
+        val material = context.hit.shape.material
+        val point = context.point
+        val eye = context.eye
+        val normal = context.normal
+
         val effectiveColor = material.color * intensity
         val light = (position - point).unit
         val ambient = effectiveColor * material.ambient

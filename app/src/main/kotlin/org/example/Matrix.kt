@@ -202,5 +202,20 @@ class Matrix(
                 0, 0, 0, 1
             )
         }
+
+        fun lookAt(from: Point, to: Point, up: Vector): Matrix {
+            val forward = (to - from).unit
+            val backward = -forward
+            val upn = up.unit
+            val left = forward cross upn
+            val trueUp = left cross forward
+            val orientation = Matrix(
+                left.x, left.y, left.z, 0,
+                trueUp.x, trueUp.y, trueUp.z, 0,
+                backward.x, backward.y, backward.z, 0,
+                0, 0, 0, 1
+            )
+            return orientation * translate(-from.x, -from.y, -from.z)
+        }
     }
 }

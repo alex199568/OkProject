@@ -1,58 +1,42 @@
 package org.example
 
-import kotlin.time.measureTime
+import kotlin.time.measureTimedValue
 
 object App {
 
-    private fun renderImage() {
-        val image = Image(640, 480)
-        for (y in 20 until 100) {
-            for (x in 30 until 300) {
-                image[x, y] = Color.red
+    private fun render(scene: Scene, camera: Camera): Image {
+        val result = Image(camera.w, camera.h)
+        for (y in 0 until camera.h) {
+            for (x in 0 until camera.w) {
+                result[x, y] = scene.color(camera.ray(x, y))
             }
         }
-        image.save("renders/image.png")
+        return result
     }
 
     @JvmStatic
     fun main(args: Array<String>) {
         println("---")
 
-        val rayOrigin = Point(0, 0, -5)
-        val wallZ = 10.0
-        val wallSize = 7.0
-        val canvasPixels = 640
-        val pixelSize = wallSize / canvasPixels
-        val half = wallSize / 2
-        val canvas = Image(canvasPixels, canvasPixels)
-        val material = Material(Color.red, 0.1, 0.9, 0.9, 200.0)
-        val light = Light(Point(-10, 10, -10), Color.gray)
-        val shape = Sphere()
-        val buffer = IntersectionsBuffer()
+        val redMaterial = Material(Color.red, 0.1, 0.9, 0.9, 200.0)
+        val s1 = Sphere(redMaterial, transform { scale(0.3, 0.3, 0.3); move(-0.5, 0, 0) })
 
-        val duration = measureTime {
-            for (y in 0 until canvasPixels) {
-                val worldY = half - pixelSize * y
-                for (x in 0 until canvasPixels) {
-                    buffer.clear()
+        val greenMaterial = Material(Color.green, 0.1, 0.9, 0.9, 200.0)
+        val s2 = Sphere(greenMaterial, transform { scale(0.2); move(0.3, 0, 0) })
 
-                    val worldX = -half + pixelSize * x
-                    val position = Point(worldX, worldY, wallZ)
-                    val ray = Ray(rayOrigin, (position - rayOrigin).unit)
-                    shape.intersect(ray, buffer)
-                    val hit = buffer.hit
-                    if (hit != null) {
-                        val point = ray[hit.t]
-                        val normal = shape.normal(point)
-                        val eye = -ray.direction
-                        val color = light.calculate(material, point, eye, normal)
-                        canvas[x, y] = color
-                    }
-                }
-            }
-        }
+        val camera = Camera(640, 480, pi / 3, Matrix.lookAt(Point(0, 0, -2), Point.zero, Vector.y))
+
+        val scene = Scene(
+            shapes = listOf(s1, s2),
+            lights = listOf(
+                Light(Point(-10, 10, -10), Color.gray),
+                Light(Point(10, 4, -10), Color.darkGray)
+            )
+        )
+
+        val (image, duration) = measureTimedValue { render(scene, camera) }
         println("Rendering time: $duration")
 
-        canvas.save("renders/light.png")
+        image.save("renders/scene.png")
     }
 }

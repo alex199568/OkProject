@@ -8,7 +8,7 @@ class Transform {
     private var rotationZ = Matrix.identity
     private var scale = Matrix.identity
 
-    fun translate(x: Number, y: Number, z: Number): Transform {
+    fun move(x: Number, y: Number, z: Number): Transform {
         translation = Matrix.translate(x, y, z)
         return this
     }
@@ -30,6 +30,11 @@ class Transform {
 
     fun scale(x: Number, y: Number, z: Number): Transform {
         scale = Matrix.scale(x, y, z)
+        return this
+    }
+
+    fun scale(all: Number): Transform {
+        scale = Matrix.scale(all, all, all)
         return this
     }
 

@@ -1,9 +1,9 @@
 package org.example
 
 data class Color(
-    val r: Double,
-    val g: Double,
-    val b: Double
+    var r: Double,
+    var g: Double,
+    var b: Double
 ) {
 
     constructor(r: Number, g: Number, b: Number): this(
@@ -18,6 +18,12 @@ data class Color(
             g = g + other.g,
             b = b + other.b
         )
+    }
+
+    operator fun plusAssign(other: Color) {
+        r += other.r
+        g += other.g
+        b += other.b
     }
 
     operator fun minus(other: Color): Color {
